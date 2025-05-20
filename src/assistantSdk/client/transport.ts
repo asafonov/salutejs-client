@@ -70,7 +70,7 @@ export const createTransport = ({ createWS = defaultWSCreator, checkCertUrl }: C
                 return;
             }
 
-            window.clearTimeout(retryTimeoutId);
+            retryTimeoutId !== -1 && window.clearTimeout(retryTimeoutId);
 
             retries = 0;
 
@@ -90,7 +90,7 @@ export const createTransport = ({ createWS = defaultWSCreator, checkCertUrl }: C
 
             // пробуем переподключаться, если возникла ошибка при коннекте
             if (!webSocket || (webSocket.readyState === 3 && !stopped)) {
-                window.clearTimeout(retryTimeoutId);
+                retryTimeoutId !== -1 && window.clearTimeout(retryTimeoutId);
 
                 if (retries < 2) {
                     retryTimeoutId = window.setTimeout(() => {
@@ -135,12 +135,6 @@ export const createTransport = ({ createWS = defaultWSCreator, checkCertUrl }: C
     };
 
     const send = (data: Uint8Array) => {
-        if (!window.navigator.onLine) {
-            close();
-            emit('error');
-            throw new Error('The client seems to be offline');
-        }
-
         webSocket.send(data);
     };
 
