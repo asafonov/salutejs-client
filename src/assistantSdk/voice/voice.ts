@@ -220,14 +220,6 @@ export const createVoice = (
      * @param messageName указать, если чанки для шазама
      */
     const sendVoice = async (chunks: Uint8Array[], messageName?: 'MUSIC_RECOGNITION') => {
-        chunks = filterEmptyChunks(chunks);
-
-        stopVoice();
-
-        if (isPlaying) {
-            voicePlayer?.stop();
-        }
-
         if (!isRecognizeInitializing && chunks.length) {
             isRecognizeInitializing = true;
 
